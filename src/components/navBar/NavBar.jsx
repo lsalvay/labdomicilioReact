@@ -4,7 +4,7 @@ var Box = require('./Box.jsx')
 
 var menu = [
 	{
-	"name": "Inicio",
+	"name": "Home",
 	"code": "1"
 	},
 	{
