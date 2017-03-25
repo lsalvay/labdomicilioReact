@@ -32543,10 +32543,10 @@ var menu = [{
 	"name": "Home",
 	"code": "1"
 }, {
-	"name": "Turnos",
+	"name": "Turno",
 	"code": "2"
 }, {
-	"name": "Pacientes",
+	"name": "Paciente",
 	"code": "3"
 }];
 
