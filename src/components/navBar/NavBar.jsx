@@ -5,15 +5,15 @@ var Box = require('./Box.jsx')
 var menu = [
 	{
 	"name": "Home",
-	"code": "1"
+	"code": "0"
 	},
 	{
 	"name": "Turno",
-	"code": "2"
+	"code": "1"
 	},
 	{
 	"name": "Paciente",
-	"code": "3"
+	"code": "2"
 	}
 
 	
