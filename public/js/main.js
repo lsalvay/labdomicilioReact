@@ -32541,13 +32541,13 @@ var Box = require('./Box.jsx');
 
 var menu = [{
 	"name": "Home",
+	"code": "0"
+}, {
+	"name": "Turno",
 	"code": "1"
 }, {
-	"name": "Turnos",
+	"name": "Paciente",
 	"code": "2"
-}, {
-	"name": "Pacientes",
-	"code": "3"
 }];
 
 var NavBar = React.createClass({
