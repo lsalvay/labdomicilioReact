@@ -1,5 +1,7 @@
 var React = require('react');
 var pubsub = require('pubsub-js');
+var { Link } = require('react-router');
+
 var NavItem = React.createClass({
 	onClick: function(event){
 		this.props.onClick(event);
@@ -7,9 +9,17 @@ var NavItem = React.createClass({
 	},
 	render: function(){
 		return(
+				<div>
 				<li className="nav-item">
-					<a className="nav-link" href="#" onClick={this.onClick}>{this.props.name}</a>
+					<Link className="nav-link" to={'/'} onClick={this.onClick}>Home</Link>
 				</li>
+				<li className="nav-item">
+					<Link className="nav-link" to={'/Appointments'} onClick={this.onClick}>Turnos</Link>
+				</li>
+				<li className="nav-item">
+					<Link className="nav-link" to={'/Patients'} onClick={this.onClick}>Pacientes</Link>
+				</li>
+				</div>
 			);		
 	}
 });

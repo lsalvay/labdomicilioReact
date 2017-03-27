@@ -1,23 +1,6 @@
 var React = require('react');
 var NavItem = require('./NavItem.jsx')
-var Box = require('./Box.jsx')
 
-var menu = [
-	{
-	"name": "Home",
-	"code": "1"
-	},
-	{
-	"name": "Turnos",
-	"code": "2"
-	},
-	{
-	"name": "Pacientes",
-	"code": "3"
-	}
-
-	
-];
 
 var NavBar = React.createClass({
 	onClickHijo: function(event){
@@ -55,13 +38,7 @@ var NavBar = React.createClass({
 						<button className="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#CollapsingNavbar" aria-controls="CollapsingNavbar" aria-expanded="false" aria-label="Toggle navigation"></button>
   						<div className="collapse navbar-toggleable-md" id="CollapsingNavbar">
 						  <ul className="nav navbar-nav">
-						    {menu.map(function(currentValue, index, array){
-						    	return <NavItem 
-						    			key={currentValue.code} 
-						    			name={currentValue.name}
-						    			onClick={this.onClickHijo}
-						    			/>;
-						    }.bind(this))}
+						    <NavItem onClick={this.onClickHijo} />
 						  </ul>
 						 </div>
 						</nav>
