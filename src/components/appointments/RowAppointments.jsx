@@ -20,6 +20,12 @@ var RowAppointments = React.createClass({
 		})
 
 	},
+	onEdit: function(event){
+		console.log('click en editar');
+	},
+	onDelete: function(event){
+		console.log('click en eliminar');
+	},
 
     render: function() {
         return (
@@ -53,8 +59,8 @@ var RowAppointments = React.createClass({
 								<td key={valor.user}>
 								{valor.user}
 								</td>
-								<td><a href="#" data-toggle="modal" data-target="#mensajeModal"><i className="fa fa-pencil" aria-hidden="true"></i></a></td>
-					      		<td><a href="#"><i className="fa fa-trash-o" aria-hidden="true"></i></a></td>
+								<td><a href="#" onClick={this.onEdit} data-toggle="modal" data-target="#mensajeModal"><i className="fa fa-pencil" aria-hidden="true"></i></a></td>
+					      		<td><a href="#" onClick={this.onDelete}><i className="fa fa-trash-o" aria-hidden="true"></i></a></td>
 							</tr>;
 						}.bind(this))}
 					</tbody>

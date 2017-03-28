@@ -37740,7 +37740,7 @@ var Appointments = React.createClass({
 			React.createElement(
 				'h1',
 				null,
-				'P\xE1gina Turnos'
+				'Esto es Turnos'
 			),
 			React.createElement(NavBar, null),
 			React.createElement(TableAppointments, null)
@@ -37806,6 +37806,12 @@ var RowAppointments = React.createClass({
 		this.setState({
 			listaAppointments: items
 		});
+	},
+	onEdit: function (event) {
+		console.log('click en editar');
+	},
+	onDelete: function (event) {
+		console.log('click en eliminar');
 	},
 
 	render: function () {
@@ -37892,7 +37898,7 @@ var RowAppointments = React.createClass({
 							null,
 							React.createElement(
 								'a',
-								{ href: '#', 'data-toggle': 'modal', 'data-target': '#mensajeModal' },
+								{ href: '#', onClick: this.onEdit, 'data-toggle': 'modal', 'data-target': '#mensajeModal' },
 								React.createElement('i', { className: 'fa fa-pencil', 'aria-hidden': 'true' })
 							)
 						),
@@ -37901,7 +37907,7 @@ var RowAppointments = React.createClass({
 							null,
 							React.createElement(
 								'a',
-								{ href: '#' },
+								{ href: '#', onClick: this.onDelete },
 								React.createElement('i', { className: 'fa fa-trash-o', 'aria-hidden': 'true' })
 							)
 						)
