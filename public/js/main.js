@@ -37682,7 +37682,7 @@ arguments[4][215][0].apply(exports,arguments)
 },{"_process":32,"dup":215}],262:[function(require,module,exports){
 var Reflux = require('reflux');
 
-var AppointmentsActions = Reflux.createActions(['getAppointments']);
+var AppointmentsActions = Reflux.createActions(['getAppointments', 'deleteAppointment']);
 
 module.exports = AppointmentsActions;
 
@@ -37696,6 +37696,7 @@ module.exports = PatientsActions;
 },{"reflux":257}],264:[function(require,module,exports){
 var React = require('react');
 var NavBar = require('./navBar/NavBar.jsx');
+var Modal = require('./modal/Modal.jsx');
 var App = React.createClass({
 	displayName: 'App',
 
@@ -37718,15 +37719,15 @@ var App = React.createClass({
 
 module.exports = App;
 
-},{"./navBar/NavBar.jsx":269,"react":241}],265:[function(require,module,exports){
+},{"./modal/Modal.jsx":269,"./navBar/NavBar.jsx":270,"react":241}],265:[function(require,module,exports){
 var React = require('react');
 var NavBar = require('./navBar/NavBar.jsx');
 var TableAppointments = require('./appointments/TableAppointments.jsx');
 var AppointmentsActions = require('../actions/AppointmentsActions.jsx');
 
-setInterval(function () {
-	AppointmentsActions.getAppointments();
-}, 5000);
+// setInterval ( function () {
+//     AppointmentsActions.getAppointments (); 
+// 		}, 5000);	
 
 var Appointments = React.createClass({
 	displayName: 'Appointments',
@@ -37751,15 +37752,15 @@ var Appointments = React.createClass({
 
 module.exports = Appointments;
 
-},{"../actions/AppointmentsActions.jsx":262,"./appointments/TableAppointments.jsx":268,"./navBar/NavBar.jsx":269,"react":241}],266:[function(require,module,exports){
+},{"../actions/AppointmentsActions.jsx":262,"./appointments/TableAppointments.jsx":268,"./navBar/NavBar.jsx":270,"react":241}],266:[function(require,module,exports){
 var React = require('react');
 var NavBar = require('./navBar/NavBar.jsx');
 var TablePatients = require('./patients/TablePatients.jsx');
 var PatientsActions = require('../actions/PatientsActions.jsx');
 
-setInterval(function () {
-	PatientsActions.getPatients();
-}, 5000);
+// setInterval ( function () {
+//     PatientsActions.getPatients (); 
+// 		}, 5000);	
 
 var Patients = React.createClass({
 	displayName: 'Patients',
@@ -37784,8 +37785,9 @@ var Patients = React.createClass({
 
 module.exports = Patients;
 
-},{"../actions/PatientsActions.jsx":263,"./navBar/NavBar.jsx":269,"./patients/TablePatients.jsx":272,"react":241}],267:[function(require,module,exports){
+},{"../actions/PatientsActions.jsx":263,"./navBar/NavBar.jsx":270,"./patients/TablePatients.jsx":273,"react":241}],267:[function(require,module,exports){
 var React = require('react');
+var Modal = require('../modal/Modal.jsx');
 var Reflux = require('reflux');
 var AppointmentsDataStore = require('../../dataStore/AppointmentsDataStore.jsx');
 
@@ -37796,8 +37798,16 @@ var RowAppointments = React.createClass({
 
 	getInitialState: function () {
 		return {
-			listaAppointments: []
+			listaAppointments: [],
+			view: { showModal: false }
+
 		};
+	},
+	handleHideModal: function () {
+		this.setState({ view: { showModal: false } });
+	},
+	handleShowModal: function () {
+		this.setState({ view: { showModal: true } });
 	},
 	componentWillMount: function () {
 		AppointmentsDataStore.getAppointments();
@@ -37807,112 +37817,126 @@ var RowAppointments = React.createClass({
 			listaAppointments: items
 		});
 	},
-	onEdit: function (event) {
-		console.log('click en editar');
+	onEdit: function (valor) {
+		console.log('Editar:' + valor);
 	},
-	onDelete: function (event) {
-		console.log('click en eliminar');
+	onDelete: function (valor) {
+		AppointmentsDataStore.deleteAppointment(valor._id);
+		const newState = this.state.listaAppointments;
+		if (newState.indexOf(valor) > -1) {
+			newState.splice(newState.indexOf(valor), 1);
+			this.setState({ listaAppointments: newState });
+		}
 	},
 
 	render: function () {
 		return React.createElement(
-			'table',
-			{ className: 'table table-hover' },
+			'div',
+			null,
 			React.createElement(
-				'thead',
-				null,
+				'table',
+				{ className: 'table table-hover' },
 				React.createElement(
-					'tr',
-					{ className: 'table-total' },
+					'thead',
+					null,
 					React.createElement(
-						'th',
-						null,
-						'D\xEDa'
-					),
-					React.createElement(
-						'th',
-						null,
-						'Hora'
-					),
-					React.createElement(
-						'th',
-						null,
-						'Especialidad'
-					),
-					React.createElement(
-						'th',
-						null,
-						'Paciente'
-					),
-					React.createElement(
-						'th',
-						null,
-						'Usuario'
-					),
-					React.createElement(
-						'th',
-						null,
-						'Editar'
-					),
-					React.createElement(
-						'th',
-						null,
-						'Eliminar'
+						'tr',
+						{ className: 'table-total' },
+						React.createElement(
+							'th',
+							null,
+							'D\xEDa'
+						),
+						React.createElement(
+							'th',
+							null,
+							'Hora'
+						),
+						React.createElement(
+							'th',
+							null,
+							'Especialidad'
+						),
+						React.createElement(
+							'th',
+							null,
+							'Paciente'
+						),
+						React.createElement(
+							'th',
+							null,
+							'Usuario'
+						),
+						React.createElement(
+							'th',
+							null,
+							'Editar'
+						),
+						React.createElement(
+							'th',
+							null,
+							'Eliminar'
+						)
 					)
+				),
+				React.createElement(
+					'tbody',
+					null,
+					this.state.listaAppointments.map(function (valor, index, array) {
+						return React.createElement(
+							'tr',
+							{ key: index },
+							React.createElement(
+								'td',
+								{ key: valor.day },
+								valor.day
+							),
+							React.createElement(
+								'td',
+								{ key: valor.hour },
+								valor.hour
+							),
+							React.createElement(
+								'td',
+								{ key: valor.specialty },
+								valor.specialty
+							),
+							React.createElement(
+								'td',
+								{ key: valor.patient },
+								valor.patient
+							),
+							React.createElement(
+								'td',
+								{ key: valor.user },
+								valor.user
+							),
+							React.createElement(
+								'td',
+								null,
+								React.createElement(
+									'a',
+									{ href: '#', onClick: (this.onEdit.bind(this, valor), this.handleShowModal), 'data-toggle': 'modal', 'data-target': '#mensajeModal' },
+									React.createElement('i', { className: 'fa fa-pencil', 'aria-hidden': 'true' })
+								)
+							),
+							React.createElement(
+								'td',
+								null,
+								React.createElement(
+									'a',
+									{ href: '#', onClick: (this.onDelete.bind(this, valor), this.handleShowModal) },
+									React.createElement('i', { className: 'fa fa-trash-o', 'aria-hidden': 'true' })
+								)
+							)
+						);
+					}.bind(this))
 				)
 			),
 			React.createElement(
-				'tbody',
-				null,
-				this.state.listaAppointments.map(function (valor, index, array) {
-					return React.createElement(
-						'tr',
-						{ key: index },
-						React.createElement(
-							'td',
-							{ key: valor.day },
-							valor.day
-						),
-						React.createElement(
-							'td',
-							{ key: valor.hour },
-							valor.hour
-						),
-						React.createElement(
-							'td',
-							{ key: valor.specialty },
-							valor.specialty
-						),
-						React.createElement(
-							'td',
-							{ key: valor.patient },
-							valor.patient
-						),
-						React.createElement(
-							'td',
-							{ key: valor.user },
-							valor.user
-						),
-						React.createElement(
-							'td',
-							null,
-							React.createElement(
-								'a',
-								{ href: '#', onClick: this.onEdit, 'data-toggle': 'modal', 'data-target': '#mensajeModal' },
-								React.createElement('i', { className: 'fa fa-pencil', 'aria-hidden': 'true' })
-							)
-						),
-						React.createElement(
-							'td',
-							null,
-							React.createElement(
-								'a',
-								{ href: '#', onClick: this.onDelete },
-								React.createElement('i', { className: 'fa fa-trash-o', 'aria-hidden': 'true' })
-							)
-						)
-					);
-				}.bind(this))
+				'div',
+				{ className: 'row' },
+				this.state.view.showModal ? React.createElement(Modal, { handleHideModal: this.handleHideModal }) : null
 			)
 		);
 	}
@@ -37920,7 +37944,7 @@ var RowAppointments = React.createClass({
 
 module.exports = RowAppointments;
 
-},{"../../dataStore/AppointmentsDataStore.jsx":273,"react":241,"reflux":257}],268:[function(require,module,exports){
+},{"../../dataStore/AppointmentsDataStore.jsx":274,"../modal/Modal.jsx":269,"react":241,"reflux":257}],268:[function(require,module,exports){
 var React = require('react');
 var RowAppointments = require('./RowAppointments.jsx');
 
@@ -37949,6 +37973,74 @@ var TableAppointments = React.createClass({
 module.exports = TableAppointments;
 
 },{"./RowAppointments.jsx":267,"react":241}],269:[function(require,module,exports){
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+var Modal = React.createClass({
+  displayName: 'Modal',
+
+  componentDidMount() {
+    $(ReactDOM.findDOMNode(this)).modal('show');
+    $(ReactDOM.findDOMNode(this)).on('hidden.bs.modal', this.props.handleHideModal);
+  },
+  render() {
+    return React.createElement(
+      'div',
+      { className: 'modal fade' },
+      React.createElement(
+        'div',
+        { className: 'modal-dialog' },
+        React.createElement(
+          'div',
+          { className: 'modal-content' },
+          React.createElement(
+            'div',
+            { className: 'modal-header' },
+            React.createElement(
+              'button',
+              { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+              React.createElement(
+                'span',
+                { 'aria-hidden': 'true' },
+                '\xD7'
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'modal-body' },
+            React.createElement(
+              'p',
+              null,
+              'Seguro quieres eliminar el turno?'
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'modal-footer' },
+            React.createElement(
+              'button',
+              { type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
+              'Cancelar'
+            ),
+            React.createElement(
+              'button',
+              { type: 'button', className: 'btn btn-primary' },
+              'Aceptar'
+            )
+          )
+        )
+      )
+    );
+  },
+  propTypes: {
+    handleHideModal: React.PropTypes.func.isRequired
+  }
+});
+
+module.exports = Modal;
+
+},{"react":241,"react-dom":34}],270:[function(require,module,exports){
 var React = require('react');
 var NavItem = require('./NavItem.jsx');
 
@@ -38049,7 +38141,7 @@ var NavBar = React.createClass({
 
 module.exports = NavBar;
 
-},{"./NavItem.jsx":270,"react":241}],270:[function(require,module,exports){
+},{"./NavItem.jsx":271,"react":241}],271:[function(require,module,exports){
 var React = require('react');
 var pubsub = require('pubsub-js');
 var { Link } = require('react-router');
@@ -38098,7 +38190,7 @@ var NavItem = React.createClass({
 
 module.exports = NavItem;
 
-},{"pubsub-js":33,"react":241,"react-router":190}],271:[function(require,module,exports){
+},{"pubsub-js":33,"react":241,"react-router":190}],272:[function(require,module,exports){
 var React = require('react');
 var Reflux = require('reflux');
 var PatientsDataStore = require('../../dataStore/PatientsDataStore.jsx');
@@ -38200,7 +38292,7 @@ var RowPatients = React.createClass({
 
 module.exports = RowPatients;
 
-},{"../../dataStore/PatientsDataStore.jsx":274,"react":241,"reflux":257}],272:[function(require,module,exports){
+},{"../../dataStore/PatientsDataStore.jsx":275,"react":241,"reflux":257}],273:[function(require,module,exports){
 var React = require('react');
 var RowPatients = require('./RowPatients.jsx');
 
@@ -38228,13 +38320,14 @@ var TablePatients = React.createClass({
 
 module.exports = TablePatients;
 
-},{"./RowPatients.jsx":271,"react":241}],273:[function(require,module,exports){
+},{"./RowPatients.jsx":272,"react":241}],274:[function(require,module,exports){
 var Reflux = require('reflux');
 var AppointmentsActions = require('../actions/AppointmentsActions.jsx');
 var $ = require('jquery');
 
 var AppointmentsDataStore = Reflux.createStore({
 	urlAppointments: 'http://localhost:3001/api/appointments',
+	deleteAppointment: 'http://localhost:3001/api/appointment/',
 	listenables: [AppointmentsActions],
 	appointmentsList: [],
 	getAppointments: function () {
@@ -38247,13 +38340,24 @@ var AppointmentsDataStore = Reflux.createStore({
 				this.trigger('onResolve', data.appointments);
 			}.bind(this)
 		});
+	},
+	deleteAppointment: function (id) {
+		$.ajax({
+			url: 'http://localhost:3001/api/appointment/' + id,
+			type: 'DELETE',
+			cahe: false,
+			context: this,
+			success: function (data) {
+				console.log('Eliminado');
+			}.bind(this)
+		});
 	}
 
 });
 
 module.exports = AppointmentsDataStore;
 
-},{"../actions/AppointmentsActions.jsx":262,"jquery":30,"reflux":257}],274:[function(require,module,exports){
+},{"../actions/AppointmentsActions.jsx":262,"jquery":30,"reflux":257}],275:[function(require,module,exports){
 var Reflux = require('reflux');
 var PatientsActions = require('../actions/PatientsActions.jsx');
 var $ = require('jquery');
@@ -38277,7 +38381,7 @@ var PatientsDataStore = Reflux.createStore({
 
 module.exports = PatientsDataStore;
 
-},{"../actions/PatientsActions.jsx":263,"jquery":30,"reflux":257}],275:[function(require,module,exports){
+},{"../actions/PatientsActions.jsx":263,"jquery":30,"reflux":257}],276:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
 var App = require('./components/App.jsx');
@@ -38293,4 +38397,4 @@ ReactDOM.render(React.createElement(
 	React.createElement(Route, { path: '/Patients', component: Patients })
 ), document.getElementById('main'));
 
-},{"./components/App.jsx":264,"./components/Appointments.jsx":265,"./components/Patients.jsx":266,"react":241,"react-dom":34,"react-router":190}]},{},[275]);
+},{"./components/App.jsx":264,"./components/Appointments.jsx":265,"./components/Patients.jsx":266,"react":241,"react-dom":34,"react-router":190}]},{},[276]);

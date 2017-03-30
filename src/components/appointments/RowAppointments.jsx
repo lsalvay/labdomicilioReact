@@ -1,4 +1,5 @@
 var React = require('react');
+var Modal = require('../modal/Modal.jsx');
 var Reflux = require('reflux');
 var AppointmentsDataStore = require('../../dataStore/AppointmentsDataStore.jsx');
 
@@ -8,9 +9,17 @@ var RowAppointments = React.createClass({
 
 	getInitialState: function(){
 			return{
-					listaAppointments: []
+					listaAppointments: [],
+					view: {showModal: false}
+
 			};
 	},
+	handleHideModal: function(){
+        	this.setState({view: {showModal: false}})
+        },
+	handleShowModal: function(){
+        	this.setState({view: {showModal: true}})
+        },	
 	componentWillMount: function(){
 		AppointmentsDataStore.getAppointments();	
 	},
@@ -20,15 +29,21 @@ var RowAppointments = React.createClass({
 		})
 
 	},
-	onEdit: function(event){
-		console.log('click en editar');
+	onEdit: function(valor){
+		console.log('Editar:' + valor);
 	},
-	onDelete: function(event){
-		console.log('click en eliminar');
+	onDelete: function(valor){
+		AppointmentsDataStore.deleteAppointment(valor._id);
+		const newState = this.state.listaAppointments;
+    	if (newState.indexOf(valor) > -1) {
+      	newState.splice(newState.indexOf(valor), 1);
+      	this.setState({listaAppointments: newState})
+      }
 	},
 
     render: function() {
         return (
+        	<div>
         		<table className="table table-hover">
         			<thead>
 						<tr className="table-total">
@@ -59,14 +74,19 @@ var RowAppointments = React.createClass({
 								<td key={valor.user}>
 								{valor.user}
 								</td>
-								<td><a href="#" onClick={this.onEdit} data-toggle="modal" data-target="#mensajeModal"><i className="fa fa-pencil" aria-hidden="true"></i></a></td>
-					      		<td><a href="#" onClick={this.onDelete}><i className="fa fa-trash-o" aria-hidden="true"></i></a></td>
-							</tr>;
+								<td><a href="#" onClick={this.onEdit.bind(this, valor), this.handleShowModal} data-toggle="modal" data-target="#mensajeModal"><i className="fa fa-pencil" aria-hidden="true"></i></a></td>
+					      		<td><a href="#" onClick={this.onDelete.bind(this, valor), this.handleShowModal}><i className="fa fa-trash-o" aria-hidden="true"></i></a></td>
+					      	</tr>;
 						}.bind(this))}
 					</tbody>
 				</table>
+				<div className="row">
+            	{this.state.view.showModal ? <Modal handleHideModal={this.handleHideModal}/> : null}
+        	</div>
+        	</div>
         );
     }
 });
+
 
 module.exports = RowAppointments;

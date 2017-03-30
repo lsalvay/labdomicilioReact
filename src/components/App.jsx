@@ -1,7 +1,8 @@
 var React = require('react');
 var NavBar = require('./navBar/NavBar.jsx');
+var Modal = require('./modal/Modal.jsx');
 var App = React.createClass({
-	
+
 render: function(){
 
 	return (
